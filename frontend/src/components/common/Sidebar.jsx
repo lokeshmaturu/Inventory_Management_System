@@ -8,7 +8,7 @@ export default function Sidebar(){
   const role = user?.role || 'staff'
 
   let items = [
-    { to: '/', label: 'Dashboard', icon: '📊' },
+    { to: role === 'admin' ? '/admin' : role === 'manager' ? '/manager' : '/staff', label: 'Dashboard', icon: '📊' },
     { to: '/products', label: 'Products', icon: '📦' },
     { to: '/stock', label: 'Stock', icon: '📑' },
     { to: '/sales', label: 'Sales', icon: '💰' },
