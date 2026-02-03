@@ -8,7 +8,7 @@ export default function Sidebar(){
   const role = user?.role || 'staff'
 
   let items = [
-    { to: role === 'admin' ? '/admin' : role === 'manager' ? '/manager' : '/staff', label: 'Dashboard v1.3', icon: '📊' },
+    { to: role === 'admin' ? '/admin' : role === 'manager' ? '/manager' : '/staff', label: 'Dashboard', icon: '📊' },
     { to: '/products', label: 'Products', icon: '📦' },
     { to: '/stock', label: 'Stock', icon: '📑' },
     { to: '/sales', label: 'Sales', icon: '💰' },
@@ -38,7 +38,6 @@ export default function Sidebar(){
         <div className="mb-2">Support</div>
         <Link to="/notifications" className="block text-gray-700 hover:bg-gray-50 px-3 py-1 rounded">Notifications</Link>
         <Link to="/audit-logs" className="block text-gray-700 hover:bg-gray-50 px-3 py-1 rounded">Audit Logs</Link>
-        <div className="mt-4 text-xs text-gray-400 px-3">v1.3 - Verified Update</div>
       </div>
     </aside>
   )
