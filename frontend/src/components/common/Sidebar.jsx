@@ -38,6 +38,7 @@ export default function Sidebar(){
         <div className="mb-2">Support</div>
         <Link to="/notifications" className="block text-gray-700 hover:bg-gray-50 px-3 py-1 rounded">Notifications</Link>
         <Link to="/audit-logs" className="block text-gray-700 hover:bg-gray-50 px-3 py-1 rounded">Audit Logs</Link>
+        <div className="mt-4 text-xs text-gray-400 px-3">v1.2</div>
       </div>
     </aside>
   )
