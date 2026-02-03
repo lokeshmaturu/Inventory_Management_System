@@ -1,18 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import { Download, Filter, MoreHorizontal } from 'lucide-react'
+import { Download, Filter, MoreHorizontal, X, Calendar, Package } from 'lucide-react'
 import DashboardCards from '../components/dashboard/DashboardCards'
 import StockChart from '../components/dashboard/StockChart'
 import reportApi from '../api/reportApi'
 import productApi from '../api/productApi'
 import useData from '../hooks/useData' // Fallback data
 import { useRequest } from '../context/RequestContext'
+import useReports from '../hooks/useReports'
 
 export default function DashboardAdmin() {
   const [stats, setStats] = useState({})
   const [products, setProducts] = useState([])
-  const { seedDemoData } = useData() // Ensuring data exists for demo
+  const { seedDemoData } = useData() 
   const { requests, adminOverview } = useRequest()
+  const { reports } = useReports()
   const pendingRequests = requests.filter(r => r.status === 'pending_admin')
+
+  // Filter State
+  const [showFilter, setShowFilter] = useState(false)
+  const [filters, setFilters] = useState({ date: '', productId: '' })
+  const [tempFilters, setTempFilters] = useState({ date: '', productId: '' })
+
+  const handleApplyFilter = () => {
+    setFilters(tempFilters)
+    setShowFilter(false)
+  }
+
+  const handleResetFilter = () => {
+    setTempFilters({ date: '', productId: '' })
+    setFilters({ date: '', productId: '' })
+    setShowFilter(false)
+  }
+
+  // Filtered Data
+  const filteredProducts = filters.productId 
+      ? products.filter(p => p._id === filters.productId || p.id === filters.productId) 
+      : products
+
+  const activeFilterCount = (filters.date ? 1 : 0) + (filters.productId ? 1 : 0)
 
   useEffect(() => {
     async function load(){
@@ -22,15 +47,14 @@ export default function DashboardAdmin() {
         const p = await productApi.list()
         setProducts(p.data || [])
       } catch (err) {
-        // Fallback for visual demo if backend fails
         console.error("Backend error, using mock data", err)
         setStats({ todaySales: 12050, todayPurchase: 5400, totalProducts: 142 })
         setProducts([
-           { name: 'Laptop', stock: 45 },
-           { name: 'Mouse', stock: 120 },
-           { name: 'Keyboard', stock: 80 },
-           { name: 'Monitor', stock: 30 },
-           { name: 'Headset', stock: 65 }
+           { _id: '1', name: 'Laptop', stock: 45 },
+           { _id: '2', name: 'Mouse', stock: 120 },
+           { _id: '3', name: 'Keyboard', stock: 80 },
+           { _id: '4', name: 'Monitor', stock: 30 },
+           { _id: '5', name: 'Headset', stock: 65 }
         ])
       }
     }
@@ -38,7 +62,64 @@ export default function DashboardAdmin() {
   }, [])
 
   return (
-    <div className="p-6 md:p-8 space-y-8 animate-in fade-in duration-500">
+    <div className="p-6 md:p-8 space-y-8 animate-in fade-in duration-500 relative">
+      
+      {/* Filter Modal */}
+      {showFilter && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+           <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm animate-in zoom-in-50 duration-200">
+              <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+                 <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                    <Filter size={18} /> Filter Dashboard
+                 </h3>
+                 <button onClick={() => setShowFilter(false)} className="p-1 hover:bg-gray-100 rounded-full text-gray-500">
+                    <X size={20} />
+                 </button>
+              </div>
+              <div className="p-6 space-y-4">
+                 {/* Product Filter */}
+                 <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Focus</label>
+                    <div className="relative">
+                       <Package size={16} className="absolute left-3 top-3 text-gray-400" />
+                       <select 
+                          className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-gray-900 outline-none"
+                          value={tempFilters.productId}
+                          onChange={e => setTempFilters({...tempFilters, productId: e.target.value})}
+                       >
+                          <option value="">All Products</option>
+                          {products.map(p => (
+                             <option key={p._id || p.id} value={p._id || p.id}>{p.name}</option>
+                          ))}
+                       </select>
+                    </div>
+                 </div>
+                 {/* Date Filter */}
+                 <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                    <div className="relative">
+                       <Calendar size={16} className="absolute left-3 top-3 text-gray-400" />
+                       <input 
+                          type="date" 
+                          className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-gray-900 outline-none"
+                          value={tempFilters.date}
+                          onChange={e => setTempFilters({...tempFilters, date: e.target.value})}
+                       />
+                    </div>
+                 </div>
+              </div>
+              <div className="p-4 border-t border-gray-100 flex gap-3">
+                 <button onClick={handleResetFilter} className="flex-1 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg border border-gray-200">
+                    Reset
+                 </button>
+                 <button onClick={handleApplyFilter} className="flex-1 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-lg">
+                    Apply Filters
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -46,10 +127,46 @@ export default function DashboardAdmin() {
           <p className="text-gray-500 mt-1">Welcome back, here's what's happening today.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
-            <Filter size={16} /> Filter
+          <button 
+             onClick={() => {
+                setTempFilters(filters)
+                setShowFilter(true)
+             }}
+             className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium transition-colors shadow-sm ${activeFilterCount > 0 ? 'bg-gray-100 border-gray-400 text-gray-900' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+          >
+            <Filter size={16} /> 
+            {activeFilterCount > 0 ? `Filters (${activeFilterCount})` : 'Filter'}
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/20">
+          <button 
+             onClick={() => {
+                // Filter Manager Reports by Date if selected
+                const relevantReports = filters.date 
+                     ? reports.filter(r => r.date.startsWith(filters.date)) 
+                     : reports
+
+                const reportData = {
+                  meta: {
+                     generatedAt: new Date().toISOString(),
+                     generatedBy: 'Admin',
+                     filters: filters
+                  },
+                  summary: stats,
+                  inventorySnapshot: filteredProducts,
+                  // INCLUDE MANAGER REPORTS HERE
+                  managerDailyLogs: relevantReports
+                }
+                const dataStr = JSON.stringify(reportData, null, 2)
+                const blob = new Blob([dataStr], { type: "application/json" })
+                const url = URL.createObjectURL(blob)
+                const link = document.createElement('a')
+                link.href = url
+                link.download = `Full_Report_${filters.date || 'All'}_${Date.now()}.json`
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+             }}
+             className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/20"
+          >
             <Download size={16} /> Export Report
           </button>
         </div>
@@ -106,30 +223,42 @@ export default function DashboardAdmin() {
         {/* Left Column - Chart */}
         <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-gray-900">Inventory Status</h3>
+              <h3 className="text-lg font-bold text-gray-900">
+                 {filters.productId ? 'Product Stock Analysis' : 'Inventory Status'}
+              </h3>
               <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-400">
                  <MoreHorizontal size={20} />
               </button>
            </div>
-           <StockChart products={products} />
+           {/* Pass Transformed Data if Filtered */}
+           <StockChart products={filteredProducts} />
         </div>
 
         {/* Right Column - Recent Activity Placeholder */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col">
-           <h3 className="text-lg font-bold text-gray-900 mb-6">Recent Activity</h3>
+           <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center justify-between">
+              Recent Activity
+              {filters.date && <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500">Filtered: {filters.date}</span>}
+           </h3>
            <div className="space-y-6 flex-1">
              {[
-               { action: 'New order received', time: '2 min ago', color: 'bg-green-100 text-green-600' },
-               { action: 'Stock update: Laptop', time: '15 min ago', color: 'bg-blue-100 text-blue-600' },
-               { action: 'New supplier added', time: '1 hr ago', color: 'bg-purple-100 text-purple-600' },
-               { action: 'Issue reported', time: '3 hrs ago', color: 'bg-red-100 text-red-600' },
-               { action: 'Deployment success', time: '5 hrs ago', color: 'bg-teal-100 text-teal-600' },
-             ].map((item, i) => (
-                <div key={i} className="flex items-start gap-4">
-                   <div className={`w-2 h-2 mt-2 rounded-full ${item.color.split(' ')[1].replace('text', 'bg')}`}></div>
+               { action: 'New order received', time: '2 min ago', color: 'bg-green-500' },
+               { action: 'Stock update: Laptop', time: '15 min ago', color: 'bg-blue-500' },
+               { action: 'New supplier added', time: '1 hr ago', color: 'bg-purple-500' },
+               { action: 'Issue reported', time: '3 hrs ago', color: 'bg-red-500' },
+               { action: 'Deployment success', time: '5 hrs ago', color: 'bg-teal-500' },
+             ].map((item, i, arr) => (
+                <div key={i} className="relative pl-6 pb-6 last:pb-0">
+                   {/* Vertical Line */}
+                   {i !== arr.length - 1 && (
+                      <div className="absolute left-[5px] top-2 h-full w-[2px] bg-gray-100"></div>
+                   )}
+                   {/* Dot */}
+                   <div className={`absolute left-0 top-1.5 w-3 h-3 rounded-full ${item.color} ring-4 ring-white`}></div>
+                   
                    <div>
                       <p className="text-sm font-medium text-gray-900">{item.action}</p>
-                      <p className="text-xs text-gray-400">{item.time}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{item.time}</p>
                    </div>
                 </div>
              ))}

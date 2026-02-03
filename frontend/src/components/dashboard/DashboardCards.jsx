@@ -5,33 +5,33 @@ export default function DashboardCards({ stats = {} }) {
   const cards = [
     {
       title: 'Total Sales',
-      value: stats.todaySales ?? 0,
-      icon: <DollarSign className="text-white" size={24} />,
-      color: 'bg-blue-500',
+      value: `$${(stats.todaySales ?? 0).toLocaleString()}`,
+      icon: <DollarSign className="text-blue-600" size={24} />,
+      iconBg: 'bg-blue-100',
       trend: '+12.5%',
       trendUp: true
     },
     {
       title: 'Total Purchase',
-      value: stats.todayPurchase ?? 0,
-      icon: <ShoppingCart className="text-white" size={24} />,
-      color: 'bg-emerald-500',
+      value: `$${(stats.todayPurchase ?? 0).toLocaleString()}`,
+      icon: <ShoppingCart className="text-emerald-600" size={24} />,
+      iconBg: 'bg-emerald-100',
       trend: '+8.2%',
       trendUp: true
     },
     {
       title: 'Total Returns',
       value: stats.todayReturns ?? 0,
-      icon: <Repeat className="text-white" size={24} />,
-      color: 'bg-orange-500',
+      icon: <Repeat className="text-orange-600" size={24} />,
+      iconBg: 'bg-orange-100',
       trend: '-2.4%',
       trendUp: false
     },
     {
       title: 'Total Products',
       value: stats.totalProducts ?? 0,
-      icon: <Package className="text-white" size={24} />,
-      color: 'bg-purple-500',
+      icon: <Package className="text-purple-600" size={24} />,
+      iconBg: 'bg-purple-100',
       trend: '+4.1%',
       trendUp: true
     }
@@ -46,7 +46,7 @@ export default function DashboardCards({ stats = {} }) {
               <p className="text-sm font-medium text-gray-500">{card.title}</p>
               <h3 className="text-2xl font-bold text-gray-900 mt-2">{card.value}</h3>
             </div>
-            <div className={`p-3 rounded-xl ${card.color} shadow-lg shadow-${card.color}/30`}>
+            <div className={`p-3 rounded-xl ${card.iconBg}`}>
               {card.icon}
             </div>
           </div>

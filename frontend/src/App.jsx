@@ -27,6 +27,7 @@ import Logout from './pages/Logout'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './routes/ProtectedRoute'
 import Landing from './pages/Landing'
+import AdminLayout from './components/common/AdminLayout'
 
 import { RequestProvider } from './context/RequestContext'
 
@@ -36,59 +37,57 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* Dashboards */}
-        <Route
-          path="/admin"
-          element={<ProtectedRoute role="admin"><DashboardAdmin /></ProtectedRoute>}
-        />
-        <Route
-          path="/manager"
-          element={<ProtectedRoute role="manager"><DashboardManager /></ProtectedRoute>}
-        />
-        <Route
-          path="/staff"
-          element={<ProtectedRoute role="staff"><DashboardStaff /></ProtectedRoute>}
-        />
-
-        {/* Products & stock */}
-        <Route path="/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
-        <Route path="/products/new" element={<ProtectedRoute role="admin"><ProductCreate /></ProtectedRoute>} />
-        {/* Allow staff to access edit page, intercept in component */}
-        <Route path="/products/:id/edit" element={<ProtectedRoute><ProductEdit /></ProtectedRoute>} />
-        <Route path="/stock" element={<ProtectedRoute><Stock /></ProtectedRoute>} />
-        <Route path="/expiry" element={<ProtectedRoute><Expiry /></ProtectedRoute>} />
-
-        {/* Suppliers - Admin & Manager only */}
-        <Route path="/suppliers" element={<ProtectedRoute role={['admin', 'manager']}><Suppliers /></ProtectedRoute>} />
-        <Route path="/suppliers/:id/products" element={<ProtectedRoute role={['admin', 'manager']}><SupplierProductsPage /></ProtectedRoute>} />
-
-        {/* Sales & purchases */}
-        <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
-        <Route path="/purchases" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />
-        <Route path="/invoice/:id" element={<ProtectedRoute><InvoicePage /></ProtectedRoute>} />
-
-        {/* Reports - Admin & Manager only */}
-        <Route path="/reports" element={<ProtectedRoute role={['admin', 'manager']}><Reports /></ProtectedRoute>} />
-        <Route path="/reports/fast-slow" element={<ProtectedRoute><FastSlow /></ProtectedRoute>} />
-
-        {/* Notifications & logs */}
-        <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
-        <Route path="/audit-logs" element={<ProtectedRoute role="admin"><AuditLogsPage /></ProtectedRoute>} />
-
-        {/* Settings */}
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
-
-        {/* Import / Export */}
-        <Route path="/import" element={<ProtectedRoute role="admin"><ImportProducts /></ProtectedRoute>} />
-        <Route path="/export" element={<ProtectedRoute><ExportReports /></ProtectedRoute>} />
-
-        <Route path="/logout" element={<Logout />} />
-
-        {/* Landing page */}
         <Route path="/" element={<Landing />} />
 
+        {/* Admin Layout Routes */}
+        <Route element={<AdminLayout />}>
+          <Route
+            path="/admin"
+            element={<ProtectedRoute role="admin"><DashboardAdmin /></ProtectedRoute>}
+          />
+          <Route
+            path="/manager"
+            element={<ProtectedRoute role="manager"><DashboardManager /></ProtectedRoute>}
+          />
+          <Route
+            path="/staff"
+            element={<ProtectedRoute role="staff"><DashboardStaff /></ProtectedRoute>}
+          />
+
+          {/* Products & stock */}
+          <Route path="/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
+          <Route path="/products/new" element={<ProtectedRoute role={['admin', 'manager']}><ProductCreate /></ProtectedRoute>} />
+          <Route path="/products/:id/edit" element={<ProtectedRoute><ProductEdit /></ProtectedRoute>} />
+          <Route path="/stock" element={<ProtectedRoute><Stock /></ProtectedRoute>} />
+          <Route path="/expiry" element={<ProtectedRoute><Expiry /></ProtectedRoute>} />
+
+          {/* Suppliers */}
+          <Route path="/suppliers" element={<ProtectedRoute role={['admin', 'manager']}><Suppliers /></ProtectedRoute>} />
+          <Route path="/suppliers/:id/products" element={<ProtectedRoute role={['admin', 'manager']}><SupplierProductsPage /></ProtectedRoute>} />
+
+          {/* Sales & purchases */}
+          <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
+          <Route path="/purchases" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />
+          <Route path="/invoice/:id" element={<ProtectedRoute><InvoicePage /></ProtectedRoute>} />
+
+          {/* Reports */}
+          <Route path="/reports" element={<ProtectedRoute role={['admin', 'manager']}><Reports /></ProtectedRoute>} />
+          <Route path="/reports/fast-slow" element={<ProtectedRoute><FastSlow /></ProtectedRoute>} />
+
+          {/* Notifications & logs */}
+          <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+          <Route path="/audit-logs" element={<ProtectedRoute role="admin"><AuditLogsPage /></ProtectedRoute>} />
+
+          {/* Settings */}
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
+
+          {/* Import / Export */}
+          <Route path="/import" element={<ProtectedRoute role={['admin', 'manager']}><ImportProducts /></ProtectedRoute>} />
+          <Route path="/export" element={<ProtectedRoute><ExportReports /></ProtectedRoute>} />
+        </Route>
+
+        <Route path="/logout" element={<Logout />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </RequestProvider>

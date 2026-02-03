@@ -5,11 +5,19 @@ export const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const stored = localStorage.getItem('user')
-    if (stored) setUser(JSON.parse(stored))
+    if (stored) {
+       try { 
+          setUser(JSON.parse(stored)) 
+       } catch(e) { 
+          console.error("Failed to parse user", e)
+          localStorage.removeItem('user')
+       }
+    }
+    setLoading(false)
   }, [])
 
   const login = async (credentials) => {
