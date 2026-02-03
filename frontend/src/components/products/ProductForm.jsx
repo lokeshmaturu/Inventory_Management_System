@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import productApi from '../../api/productApi'
 
-export default function ProductForm({ product }) {
+export default function ProductForm({ product, onSubmitOverride }) {
   const [form, setForm] = useState({ name: '', sku: '', category: '', price: 0, stock: 0, expiryDate: '' })
   const [message, setMessage] = useState(null)
 
@@ -11,6 +11,12 @@ export default function ProductForm({ product }) {
 
   const submit = async (e) => {
     e.preventDefault()
+    if (onSubmitOverride) {
+      // Allow parent to handle submission (e.g. for Staff Request workflow)
+      await onSubmitOverride(form)
+      return
+    }
+    
     try {
       if (product && product._id) await productApi.update(product._id, form)
       else await productApi.create(form)

@@ -31,6 +31,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('token', token)
     localStorage.setItem('user', JSON.stringify(userObj))
     setUser(userObj)
+    // Force a small delay to ensure state propagates if needed, though react batching usually handles it
   }
 
   const logout = () => {

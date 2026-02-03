@@ -1,17 +1,25 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import useAuth from '../../hooks/useAuth'
 
 export default function Sidebar(){
   const location = useLocation()
-  const items = [
+  const { user } = useAuth()
+  const role = user?.role || 'staff'
+
+  let items = [
     { to: '/', label: 'Dashboard', icon: '📊' },
     { to: '/products', label: 'Products', icon: '📦' },
     { to: '/stock', label: 'Stock', icon: '📑' },
-    { to: '/suppliers', label: 'Suppliers', icon: '🏷️' },
     { to: '/sales', label: 'Sales', icon: '💰' },
     { to: '/purchases', label: 'Purchases', icon: '🛒' },
-    { to: '/reports', label: 'Reports', icon: '📈' }
   ]
+
+  // Staff should NOT see Suppliers or Reports
+  if (role !== 'staff') {
+    items.push({ to: '/suppliers', label: 'Suppliers', icon: '🏷️' })
+    items.push({ to: '/reports', label: 'Reports', icon: '📈' })
+  }
 
   return (
     <aside className="w-56 bg-white h-full p-4 border-r">
