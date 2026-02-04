@@ -55,7 +55,7 @@ export default function DashboardStaff() {
                  <History size={18} /> Recent Transactions
               </h3>
               <div className="space-y-4">
-                 {(Array.isArray(sales) && sales.length > 0) ? sales.slice(0, 5).map((sale, i) => (
+                 {(!Array.isArray(sales) || sales.length === 0) ? <p className="text-gray-400">No recent sales.</p> : sales.slice(0, 5).map((sale, i) => (
                     <div key={i} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100">
                        <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold">
