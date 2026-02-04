@@ -30,9 +30,10 @@ export function AuthProvider({ children }) {
       setUser(user)
       return user
     } catch (error) {
-      console.warn("Backend login failed, falling back to mock login for demo/dev mode.")
+      console.warn("Backend login failed (Mock Mode Active):", error.message)
       
-      // Mock Login Logic based on email
+      // Force Mock Login Logic for ANY error (Network, 404, 405, etc)
+      // This ensures "Frontend Only" users can always login
       const email = credentials.email.toLowerCase()
       let role = 'staff'
       let name = 'Staff User'
