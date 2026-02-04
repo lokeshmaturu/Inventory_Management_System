@@ -22,18 +22,11 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials) => {
     setLoading(true)
+    // Pure Mock Mode: Skip Backend Call
     try {
-      const res = await authApi.login(credentials)
-      const { token, user } = res.data
-      localStorage.setItem('token', token)
-      localStorage.setItem('user', JSON.stringify(user))
-      setUser(user)
-      return user
-    } catch (error) {
-      console.warn("Backend login failed (Mock Mode Active):", error.message)
-      
-      // Force Mock Login Logic for ANY error (Network, 404, 405, etc)
-      // This ensures "Frontend Only" users can always login
+      // Simulate network delay
+      await new Promise(r => setTimeout(r, 600));
+
       const email = credentials.email.toLowerCase()
       let role = 'staff'
       let name = 'Staff User'
@@ -57,6 +50,9 @@ export function AuthProvider({ children }) {
       localStorage.setItem('user', JSON.stringify(mockUser))
       setUser(mockUser)
       return mockUser
+    } catch (error) {
+       console.error("Login logic error", error)
+       throw error
     } finally {
       setLoading(false)
     }
