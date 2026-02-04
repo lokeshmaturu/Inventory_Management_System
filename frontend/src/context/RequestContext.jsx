@@ -7,16 +7,7 @@ export function RequestProvider({ children }) {
 
   useEffect(() => {
     const stored = localStorage.getItem('update_requests')
-    if (stored) {
-       try {
-          const parsed = JSON.parse(stored)
-          if (Array.isArray(parsed)) setRequests(parsed)
-          else setRequests([])
-       } catch (e) {
-          console.error("Failed to parse requests", e)
-          setRequests([])
-       }
-    }
+    if (stored) setRequests(JSON.parse(stored))
   }, [])
 
   const saveRequests = (newRequests) => {

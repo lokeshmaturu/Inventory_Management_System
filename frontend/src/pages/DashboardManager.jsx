@@ -111,7 +111,7 @@ export default function DashboardManager() {
             </span>
         </div>
         
-        {(!stock.lowStock || stock.lowStock.length === 0) ? (
+        {stock.lowStock?.length === 0 ? (
            <div className="p-12 text-center text-gray-500">No items need reorder right now.</div>
         ) : (
           <div className="overflow-x-auto">
@@ -126,7 +126,7 @@ export default function DashboardManager() {
                    </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                   {(stock.lowStock || []).map((p, i) => (
+                   {stock.lowStock.map((p, i) => (
                       <tr key={i} className="hover:bg-gray-50 transition-colors">
                          <td className="px-6 py-4 font-medium text-gray-900">{p.name}</td>
                          <td className="px-6 py-4 flex items-center gap-2">

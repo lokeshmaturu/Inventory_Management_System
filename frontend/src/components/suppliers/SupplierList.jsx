@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 export default function SupplierList({ suppliers = [], isManager }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      {(Array.isArray(suppliers) ? suppliers : []).map(s => (
+      {suppliers.map(s => (
         <div key={s._id || s.id} className="p-4 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors">
           <div>
             <div className="font-semibold text-gray-900">{s.name}</div>
@@ -18,7 +18,7 @@ export default function SupplierList({ suppliers = [], isManager }) {
           </div>
         </div>
       ))}
-      {(!Array.isArray(suppliers) || suppliers.length === 0) && <div className="p-8 text-center text-gray-500">No suppliers found.</div>}
+      {suppliers.length === 0 && <div className="p-8 text-center text-gray-500">No suppliers found.</div>}
     </div>
   )
 }

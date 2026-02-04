@@ -33,9 +33,9 @@ export default function DashboardAdmin() {
   }
 
   // Filtered Data
-  const filteredProducts = filters.productId && Array.isArray(products)
+  const filteredProducts = filters.productId 
       ? products.filter(p => p._id === filters.productId || p.id === filters.productId) 
-      : (Array.isArray(products) ? products : [])
+      : products
 
   const activeFilterCount = (filters.date ? 1 : 0) + (filters.productId ? 1 : 0)
 
@@ -45,7 +45,7 @@ export default function DashboardAdmin() {
         const res = await reportApi.salesSummary()
         setStats(res.data || {})
         const p = await productApi.list()
-        setProducts(Array.isArray(p.data) ? p.data : [])
+        setProducts(p.data || [])
       } catch (err) {
         console.error("Backend error, using mock data", err)
         setStats({ todaySales: 12050, todayPurchase: 5400, totalProducts: 142 })
@@ -88,7 +88,7 @@ export default function DashboardAdmin() {
                           onChange={e => setTempFilters({...tempFilters, productId: e.target.value})}
                        >
                           <option value="">All Products</option>
-                          {Array.isArray(products) && products.map(p => (
+                          {products.map(p => (
                              <option key={p._id || p.id} value={p._id || p.id}>{p.name}</option>
                           ))}
                        </select>
