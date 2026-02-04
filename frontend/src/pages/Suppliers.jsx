@@ -13,7 +13,7 @@ export default function Suppliers() {
     async function fetch() {
       try {
         const res = await supplierApi.list()
-        setSuppliers(res.data || [])
+        setSuppliers(Array.isArray(res.data) ? res.data : [])
       } catch (err) {
         setSuppliers([
            { _id: '1', name: 'Acme Corp', contact: 'john@acme.com' },
