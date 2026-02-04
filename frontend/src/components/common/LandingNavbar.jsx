@@ -30,10 +30,10 @@ export default function LandingNavbar() {
     >
       <div className="container-main flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center text-white font-bold text-xl group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary-500/30 group-hover:scale-105 transition-transform duration-300">
             A
           </div>
-          <span className={`font-bold text-xl ${scrolled ? 'text-gray-900' : 'text-gray-900'}`}>
+          <span className={`font-bold text-xl tracking-tight ${scrolled ? 'text-gray-900' : 'text-gray-900'}`}>
             Acme<span className="text-primary-600">Inventory</span>
           </span>
         </Link>
@@ -44,11 +44,10 @@ export default function LandingNavbar() {
             <a
               key={link.name}
               href={link.href}
-              className={`text-sm font-medium hover:text-primary-600 transition-colors ${
-                scrolled ? 'text-gray-600' : 'text-gray-600'
-              }`}
+              className={`text-sm font-medium transition-colors hover:text-primary-600 relative group py-1`}
             >
               {link.name}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 transition-all duration-300 group-hover:w-full"></span>
             </a>
           ))}
         </div>
@@ -57,7 +56,7 @@ export default function LandingNavbar() {
           <Link
             to="/login"
             className={`text-sm font-medium hover:text-primary-600 transition-colors ${
-              scrolled ? 'text-gray-600' : 'text-gray-600'
+              scrolled ? 'text-gray-700' : 'text-gray-700'
             }`}
           >
             Log In

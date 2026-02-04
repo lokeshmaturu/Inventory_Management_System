@@ -22,22 +22,35 @@ export default function Sidebar(){
   }
 
   return (
-    <aside className="w-56 bg-white h-full p-4 border-r">
-      <div className="mb-4 text-sm text-gray-500">Main</div>
+    <aside className="w-64 bg-white h-full p-4 border-r border-gray-100 flex flex-col shadow-sm relative z-20">
+      <div className="mb-6 px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Main Menu</div>
       <nav className="flex flex-col gap-1">
-        {items.map(i => (
-          <Link key={i.to} to={i.to} className={`group flex items-center gap-3 px-3 py-2 rounded-md text-sm ${location.pathname === i.to ? 'bg-primary-50 text-primary-700 font-medium' : 'text-gray-700 hover:bg-gray-50'}`}>
-            <span className="w-6 text-center">{i.icon}</span>
-            <span className="flex-1">{i.label}</span>
-            {location.pathname === i.to && <span className="text-xs text-primary-500">Active</span>}
-          </Link>
-        ))}
+        {items.map(i => {
+          const isActive = location.pathname === i.to;
+          return (
+            <Link 
+              key={i.to} 
+              to={i.to} 
+              className={`
+                group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200
+                ${isActive 
+                  ? 'bg-primary-50 text-primary-700 font-semibold shadow-sm ring-1 ring-primary-100' 
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:translate-x-1'
+                }
+              `}
+            >
+              <span className={`w-6 transition-transform group-hover:scale-110 ${isActive ? 'scale-110' : ''}`}>{i.icon}</span>
+              <span className="flex-1">{i.label}</span>
+              {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary-500" />}
+            </Link>
+          )
+        })}
       </nav>
 
-      <div className="mt-6 pt-4 border-t text-sm text-gray-500">
-        <div className="mb-2">Support</div>
-        <Link to="/notifications" className="block text-gray-700 hover:bg-gray-50 px-3 py-1 rounded">Notifications</Link>
-        <Link to="/audit-logs" className="block text-gray-700 hover:bg-gray-50 px-3 py-1 rounded">Audit Logs</Link>
+      <div className="mt-auto pt-6 border-t border-gray-100">
+        <div className="mb-3 px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Support</div>
+        <Link to="/notifications" className="block text-gray-600 hover:bg-gray-50 hover:text-gray-900 px-3 py-2 rounded-lg transition-colors">Notifications</Link>
+        <Link to="/audit-logs" className="block text-gray-600 hover:bg-gray-50 hover:text-gray-900 px-3 py-2 rounded-lg transition-colors">Audit Logs</Link>
       </div>
     </aside>
   )

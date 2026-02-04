@@ -30,25 +30,25 @@ export default function Landing() {
               </span>
               New: AI-Powered Demand Forecasting
             </div>
-            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]">
+            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1] mb-6">
               Inventory management <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600">
+              <span className="text-gradient">
                 reimagined.
               </span>
             </h1>
-            <p className="text-xl text-gray-500 max-w-lg leading-relaxed">
+            <p className="text-xl text-gray-600 max-w-lg leading-relaxed mb-8">
               Stop guessing. Start growing. Real-time tracking, supplier management, and powerful analytics to keep your stock in check.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button 
                 onClick={() => navigate('/register')}
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-1"
+                className="btn-click inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50"
               >
                 Start Free Trial <ArrowRight size={20} />
               </button>
               <button 
                 onClick={() => navigate('/login')} // Using login for demo
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-all hover:-translate-y-1"
+                className="btn-click inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-all hover:border-gray-300"
               >
                 View Live Demo
               </button>
@@ -145,8 +145,8 @@ export default function Landing() {
                 desc: 'Track every action taken in the system for full accountability.' 
               }
             ].map((feature, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow group">
-                <div className={`w-12 h-12 rounded-xl ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-${feature.color}/30`}>
+              <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover-lift group transition-all duration-300 hover:border-gray-200">
+                <div className={`w-14 h-14 rounded-2xl ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-opacity-20`}>
                   {feature.icon}
                 </div>
                 <h4 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h4>

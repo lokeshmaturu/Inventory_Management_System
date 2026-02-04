@@ -6,7 +6,6 @@ export default function StockManagement() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
   const [adjust, setAdjust] = useState({})
-  const [setValues, setSetValues] = useState({})
   const [actionLoading, setActionLoading] = useState(false)
   const [message, setMessage] = useState('')
 
@@ -34,6 +33,8 @@ export default function StockManagement() {
     setActionLoading(false)
   }
 
+  /* Simplified Logic: Use 'adjust' state for both "Adjust" (Add/Sub) and "Set" (Override) actions */
+
   const applyAdjust = async (productId) => {
     const delta = parseInt(adjust[productId], 10)
     if (Number.isNaN(delta) || delta === 0) return
@@ -42,7 +43,8 @@ export default function StockManagement() {
   }
 
   const setQuantity = async (productId) => {
-    const val = parseInt(setValues[productId], 10)
+    // We will use the SAME input field state (adjust) for setting value too
+    const val = parseInt(adjust[productId], 10)
     if (Number.isNaN(val)) return
     setActionLoading(true)
     try{
@@ -50,44 +52,80 @@ export default function StockManagement() {
       setMessage('Quantity set')
       setTimeout(() => setMessage(''), 2000)
       await fetch()
+      setAdjust(prev => ({ ...prev, [productId]: '' }))
     }catch(e){ console.error(e) }
     setActionLoading(false)
   }
 
   return (
-    <div className="bg-white p-4 rounded shadow">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="font-semibold">Stock levels</h2>
-        {message && <div className="text-sm text-green-600">{message}</div>}
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider hidden">Stock levels</h2>
+        {message && <div className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded animate-pulse">{message}</div>}
       </div>
 
       {loading ? <div>Loading...</div> : (
         <div className="space-y-2">
           {products.map(p => (
-            <div key={p._id||p.id} className="flex items-center justify-between border p-2 rounded">
-              <div>
-                <div className="font-medium">{p.name}</div>
-                <div className="text-sm text-gray-500">SKU: {p.sku || '-'} • {p.category || ''}</div>
+            <div key={p._id||p.id} className="border border-gray-100 p-4 rounded-xl hover:shadow-sm transition-shadow bg-gray-50/50">
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <div className="font-semibold text-gray-900">{p.name}</div>
+                  <div className="text-xs text-gray-500 font-medium bg-white px-2 py-0.5 rounded border border-gray-200 inline-block mt-1">
+                    SKU: {p.sku || '-'}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Current Stock</div>
+                  <div className="text-2xl font-bold text-gray-900 leading-none">{p.quantity ?? p.stock ?? 0}</div>
+                </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="text-lg font-semibold">{p.quantity ?? p.stock ?? 0}</div>
-
+              <div className="grid grid-cols-1 gap-3">
+                {/* Quick Actions */}
                 <div className="flex items-center gap-2">
-                  <button className="px-2 py-1 bg-green-500 text-white rounded" onClick={() => changeQty(p.id, 1)} disabled={actionLoading}>+1</button>
-                  <button className="px-2 py-1 bg-red-500 text-white rounded" onClick={() => changeQty(p.id, -1)} disabled={actionLoading}>-1</button>
+                   <button 
+                    onClick={() => changeQty(p.id, 1)} disabled={actionLoading}
+                    className="flex-1 py-1.5 bg-green-100 text-green-700 font-medium rounded-lg hover:bg-green-200 transition-colors disabled:opacity-50 text-sm"
+                   >
+                     +1 Add
+                   </button>
+                   <button 
+                    onClick={() => changeQty(p.id, -1)} disabled={actionLoading}
+                    className="flex-1 py-1.5 bg-red-100 text-red-700 font-medium rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50 text-sm"
+                   >
+                     -1 Remove
+                   </button>
                 </div>
 
+                {/* Adjust Input */}
                 <div className="flex items-center gap-2">
-                  <input type="number" className="w-20 p-1 border rounded" placeholder="Adjust" value={adjust[p.id] || ''} onChange={e => setAdjust(prev => ({ ...prev, [p.id]: e.target.value }))} />
-                  <button className="px-2 py-1 bg-indigo-600 text-white rounded" onClick={() => applyAdjust(p.id)} disabled={actionLoading}>Apply</button>
+                   <div className="relative flex-1">
+                      <input 
+                        type="number" 
+                        placeholder="Qty" 
+                        className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 outline-none"
+                        value={adjust[p.id] || ''} 
+                        onChange={e => setAdjust(prev => ({ ...prev, [p.id]: e.target.value }))}
+                      />
+                   </div>
+                   <button 
+                    onClick={() => applyAdjust(p.id)} disabled={actionLoading}
+                    className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 text-sm font-medium"
+                   >
+                     Adjust
+                   </button>
+                   <button 
+                    onClick={() => setQuantity(p.id)} disabled={actionLoading}
+                        className="px-3 py-1.5 bg-white border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 text-sm font-medium"
+                   >
+                     Set
+                   </button>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <input type="number" className="w-20 p-1 border rounded" placeholder="Set" value={setValues[p.id] || ''} onChange={e => setSetValues(prev => ({ ...prev, [p.id]: e.target.value }))} />
-                  <button className="px-2 py-1 bg-yellow-500 text-white rounded" onClick={() => setQuantity(p.id)} disabled={actionLoading}>Set</button>
-                </div>
-
+                
+                {/* Hidden "Set" input integrated into Adjust for simplicity or kept separate if needed. 
+                    Merging Set/Adjust UI to save space: user types number, clicks "Adjust" (+/-) or "Set" (override).
+                */}
               </div>
             </div>
           ))}
