@@ -5,7 +5,7 @@ import DashboardHeader from './DashboardHeader'
 
 export default function AdminLayout() {
   return (
-    <div className="flex h-screen bg-[#F8FAFC]">
+    <div className="flex h-screen bg-surface">
       {/* Fixed Sidebar */}
       <Sidebar />
       

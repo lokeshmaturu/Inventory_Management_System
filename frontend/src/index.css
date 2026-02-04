@@ -4,15 +4,48 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  --bg: #f7fafc;
-  --muted: #6b7280;
-  --card: #ffffff;
-  --glass: rgba(255,255,255,0.6);
+:root {
+  --bg: #0f172a;       /* Slate 900 - Deep Blue/Black */
+  --card: #1e293b;     /* Slate 800 */
+  --text-main: #f8fafc; /* Slate 50 */
+  --text-muted: #94a3b8; /* Slate 400 */
+  --primary: #38bdf8;   /* Sky 400 - Neon Blue */
+  --glass: rgba(30, 41, 59, 0.7);
 }
 
 html, body, #root {
   height: 100%;
+}
+
+/* Glassmorphism & Neon Utilities */
+.bg-surface { background-color: var(--bg); color: var(--text-main); }
+.card-glass {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  @apply rounded-xl overflow-hidden;
+}
+
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-purple {
+  background: linear-gradient(135deg, #e879f9 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-red {
+  background: linear-gradient(135deg, #f87171 0%, #f43f5e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.shadow-neon {
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
 }
 
 @layer base {
@@ -27,13 +60,13 @@ html, body, #root {
 
 @layer components {
   .card{
-    @apply bg-white rounded-lg shadow-card p-4;
+    @apply card-glass p-6;
   }
   .btn-primary{
-    @apply inline-flex items-center justify-center px-4 py-2 bg-primary-500 text-white rounded-md shadow-sm hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-300;
+    @apply inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-medium rounded-lg shadow-lg shadow-sky-500/20 hover:shadow-sky-500/40 hover:scale-[1.02] transition-all;
   }
   .btn-ghost{
-    @apply inline-flex items-center gap-2 px-3 py-1 text-muted rounded-md hover:bg-gray-50;
+    @apply inline-flex items-center gap-2 px-3 py-1 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors;
   }
   .container-main{
     @apply max-w-6xl mx-auto px-6;
@@ -101,7 +134,10 @@ html, body, #root {
 }
 
 .glass-panel {
-  @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl;
+  @apply bg-slate-800/50 backdrop-blur-xl border border-white/10 shadow-2xl;
+}
+.border-neon {
+  @apply border border-sky-500/30 shadow-[0_0_10px_rgba(14,165,233,0.2)];
 }
 
 .text-gradient {
